@@ -9,8 +9,14 @@ namespace HelloWorld.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private IProductRepository productRepository;
+
+        // constructor : DI 
+        public HomeController(ILogger<HomeController> logger,
+                         MyJsonSettings myJsonSettings, // add DI for MySetting
+                         IProductRepository productRepository)
         {
+            this.productRepository = productRepository;
             _logger = logger;
         }
 
@@ -18,33 +24,16 @@ namespace HelloWorld.Controllers
         [HttpGet]
         public IActionResult Products()
         {
-            // add our count field into the list
-            var products = new Product[]
-            {
-        new Product{ ProductId = 1, Name = "First One", Price = 1.11m, ProductCount=0},
-        new Product{ ProductId = 2, Name="Second One", Price = 2.22m, ProductCount=1},
-        new Product{ ProductId = 3, Name="Third One", Price = 3.33m, ProductCount=10},
-        new Product{ ProductId = 4, Name="Fourth One", Price = 4.44m, ProductCount=100},
-
-            };
-
-            return View(products);
+           
+            return View(productRepository.Products);
         }
 
         // Add Action
         [HttpGet]
         public IActionResult Product()
         {
-            var myProduct = new Product
-            {
-                ProductId = 1,
-                Name = "Kayak",
-                Description = "A boat for one person",
-                Category = "water-sports",
-                Price = 200m,
-            };
-
-            return View(myProduct);
+            
+            return View(productRepository.Products.First());
         }
 
 
@@ -73,8 +62,8 @@ namespace HelloWorld.Controllers
         public IActionResult Index()
         {
             // create an exception
-            int x = 1;  // add me
-            x = x / (x - 1); // add me
+           // int x = 1;  // add me
+          // x = x / (x - 1); // add me
             return View();
         }
 
@@ -82,23 +71,9 @@ namespace HelloWorld.Controllers
         {
             return View();
         }
-
-        // revise Error action as below
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            var exceptionHandlerPathFeature =
-        HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-
-            var msg = exceptionHandlerPathFeature.Error.Message;
-
-            var model = new ErrorViewModel
-            {
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                Message = msg,
-            };
-
-            return View(model);
-        }
+// used to have some code here...for error
+// move it all into the ErrorController.cs
+// include the using statements into the platform
+        
     }
 }
