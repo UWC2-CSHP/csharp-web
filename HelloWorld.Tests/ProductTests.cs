@@ -2,7 +2,7 @@ using NUnit.Framework;
 using HelloWorld.Models;
 using HelloWorld.Controllers;
 using Moq;
-using System.Linq; // ADDED
+using System.Linq; // ADDED for exercise
 
 namespace HelloWorld.Tests
 {
@@ -17,11 +17,11 @@ namespace HelloWorld.Tests
             // Step 2: Get the Results : Act
             var result = controller.Products();
 
-            // Step 3: Verity and Assert
+            // Step 3: Assert Length
             var products = (Product[])((Microsoft.AspNetCore.Mvc.ViewResult)(result)).Model;
             Assert.AreEqual(5, products.Length, "Length is invalid");
 
-            //3 products with price > $10 and 2 products with price < $10.
+            // Also Assert 3 products with price > $10 and 2 products with price < $10.
             Assert.GreaterOrEqual(products.Where(t => t.Price > 10).Count(), 3);
             Assert.GreaterOrEqual(products.Where(t => t.Price < 10).Count(), 2);
         }
@@ -52,11 +52,11 @@ namespace HelloWorld.Tests
             // Act
             var result = controller.Products();
 
-            // Assert
+            // Assert Length
             var products = (Product[])((Microsoft.AspNetCore.Mvc.ViewResult)(result)).Model;
             Assert.AreEqual(5, products.Length, "Length is invalid");
 
-            //3 products with price > $10 and 2 products with price < $10.
+            // Assert 3 products with price > $10 and 2 products with price < $10.
             Assert.GreaterOrEqual(products.Where(t => t.Price > 10).Count(), 3);
             Assert.GreaterOrEqual(products.Where(t => t.Price < 10).Count(), 2);
         }
