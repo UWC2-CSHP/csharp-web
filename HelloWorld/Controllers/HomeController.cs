@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace HelloWorld.Controllers
 {
@@ -71,9 +73,22 @@ namespace HelloWorld.Controllers
         {
             return View();
         }
-// used to have some code here...for error
-// move it all into the ErrorController.cs
-// include the using statements into the platform
-        
+        // used to have some code here...for error
+        // move it all into the ErrorController.cs
+        // include the using statements into the platform
+
+        // EF Actions
+        [HttpGet]
+        public IActionResult Classes()
+        {
+            var context = new Db.SchoolContext(); // Get access to the database
+
+            var classes = context.ClassMasters
+                                 .Include(xx => xx.Users) // Include Users table 
+                                 .OrderBy(t => t.ClassName); // sort results by classname field
+
+            return View(classes);
+        }
+
     }
 }

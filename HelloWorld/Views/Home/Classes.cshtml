@@ -1,0 +1,34 @@
+﻿@model IEnumerable<HelloWorld.Db.ClassMaster>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Classes</title>
+</head>
+
+<body>
+    @foreach (var c in Model)
+    {
+        @Html.Raw(string.Format("{0} - {1} - {2}<br />",
+                  c.ClassId, c.ClassName, c.ClassPrice))
+
+        // Add this for EF Exercise: show who is enrolled in each class
+        if (c.Users.Count > 0) 
+        {
+            <p>Users:</p>
+            foreach (var u in c.Users)
+            {
+                @Html.Raw(string.Format("{0} - {1}<br/>", u.UserId, u.UserName));
+            }
+            <br />
+            <br />
+        }
+    }
+</body>
+</html>
