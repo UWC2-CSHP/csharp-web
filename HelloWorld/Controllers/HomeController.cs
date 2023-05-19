@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 
 namespace HelloWorld.Controllers
@@ -24,6 +25,7 @@ namespace HelloWorld.Controllers
 
         // Add Action
         [HttpGet]
+        [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any)]
         public IActionResult Products()
         {
            
@@ -89,6 +91,41 @@ namespace HelloWorld.Controllers
 
             return View(classes);
         }
+
+        // for Session
+        public PartialViewResult IncrementCount()
+        {
+            return PartialView();
+        }
+        
+        // Exercise Step 2
+        public PartialViewResult DisplayLoginName()
+        {
+            return PartialView();
+        }
+
+        // Exercise Step 4 and 5
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View(); // right click to create your Login View
+        }
+        
+        
+        // Exercise Step 6
+        [HttpPost]
+        public IActionResult Login(LoginModel loginModel)
+        {
+            HttpContext.Session.SetString("UserName", loginModel.UserName);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Logoff()
+        {
+            HttpContext.Session.Remove("UserName");
+            return RedirectToAction("Index");
+        }
+
 
     }
 }

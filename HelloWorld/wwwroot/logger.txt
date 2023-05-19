@@ -1,0 +1,4 @@
+5/18/2023 6:30:02 PM : Home-Index Elapsed=00:00:45.4514460
+5/18/2023 6:31:57 PM : Home-Products Elapsed=00:00:01.7325823
+5/18/2023 6:32:12 PM : Home-Product Elapsed=00:00:01.0123205
+5/18/2023 7:09:14 PM : Home-Index Elapsed=00:01:07.0487499

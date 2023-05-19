@@ -11,11 +11,26 @@ builder.Configuration.AddJsonFile("MySettings.json",
 // Add for Json Exercise
 builder.Services.AddSingleton<MyJsonSettings>(builder.Configuration.Get<MyJsonSettings>());
 
+// Add this for HttpContext Accessor - DI
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 // DI Registeration
 builder.Services.AddSingleton<IProductRepository, ProductRepository>(); // 2. add this
+
+// Action Filter Registerations
+builder.Services.AddMvc(options => {
+   // The order of Actions Filters are important
+    options.Filters.Add<IPAddressExcludeActionFilter>();  // Added
+    options.Filters.Add<LoggingActionFilter>();
+});
+
+builder.Services.AddSession();
+
+// Add Data Caching Services 
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
@@ -33,6 +48,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession(); // add before app.MapControllerRoute( )
 
 app.MapControllerRoute(
     name: "default",
