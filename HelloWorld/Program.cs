@@ -1,5 +1,6 @@
 using HelloWorld; // 1. add this
 using HelloWorld.Models; // Add this for exercise
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("MySettings.json",
     optional: false,
     reloadOnChange: true);
+
+// Add for User Repository used for Security Check
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
 // Add for Json Exercise
 builder.Services.AddSingleton<MyJsonSettings>(builder.Configuration.Get<MyJsonSettings>());
@@ -32,6 +36,15 @@ builder.Services.AddSession();
 // Add Data Caching Services 
 builder.Services.AddMemoryCache();
 
+// Add for Authentication: Security
+// Add this
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+    {
+        options.LoginPath = new PathString("/Account/LogOn");
+        options.AccessDeniedPath = new PathString("/Account/Denied");
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,6 +60,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// add this 
+app.UseAuthentication(); // Add this BEFORE app.UseAuthorization( );
 app.UseAuthorization();
 
 app.UseSession(); // add before app.MapControllerRoute( )

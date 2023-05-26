@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization; // Add me to usings
 
 
 namespace HelloWorld.Controllers
@@ -126,6 +127,40 @@ namespace HelloWorld.Controllers
             return RedirectToAction("Index");
         }
 
+        // Set Cookies
+
+        [HttpGet]
+        public IActionResult SetCookie()
+        {
+            var cookieOptions = new CookieOptions
+            {
+                Expires = DateTime.Now.AddMinutes(1)
+            };
+
+            // Add the cookie to the response to send it to the browser
+            // Name: MyCookie
+            // Value: myUserName
+            // expiring in 1 minute
+            Response.Cookies.Append("MyCookie", "myUserName", cookieOptions);
+            return View();
+        }
+
+        // Get Cookies
+
+        [HttpGet]
+        public IActionResult GetCookie()
+        {
+            var cookieValue = Request.Cookies["MyCookie"];
+            return View((object)cookieValue);
+        }
+
+        // Security
+        // Authorization to access Notes
+        [Authorize]
+        public IActionResult Notes()
+        {
+            return View();
+        }
 
     }
 }
