@@ -60,7 +60,7 @@ namespace HelloWorld.Controllers
                             //new Claim(ClaimTypes.Role, “Admin, User”),
                         };
 
-                    // Split Admin and User and get rid of any spaces before and after         
+                    // Exercise 2: Security - Split Admin and User and get rid of any spaces before and after         
                     var roles = user.Role.Split(",");
                     foreach (var role in roles)
                     {
