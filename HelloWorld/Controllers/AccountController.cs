@@ -16,6 +16,14 @@ namespace HelloWorld.Controllers
             this.userRepository = userRepository;
         }
 
+        // Security Exercise 2: Add Denied Action
+        [HttpGet]
+        public IActionResult Denied()
+        {
+            return View();
+        }
+
+
         [HttpGet]
         public IActionResult LogOut()
         {
@@ -43,14 +51,22 @@ namespace HelloWorld.Controllers
                 var user = userRepository.LogIn(model.UserName, model.Password);
                 if (user != null)
                 {
+
+                    // Exercise 2: Security - Modify to address the roles
                     var claims = new List<Claim>
-            {
-                // Keep track of user name
-                new Claim(ClaimTypes.Name, model.UserName),
-                // Determine role of the user
-                // (just a string that you decide)
-                new Claim(ClaimTypes.Role, "User"),
-            };
+                        {
+                            // Keep track of user name
+                            new Claim(ClaimTypes.Name, model.UserName),
+                            //new Claim(ClaimTypes.Role, “Admin, User”),
+                        };
+
+                    // Split Admin and User and get rid of any spaces before and after         
+                    var roles = user.Role.Split(",");
+                    foreach (var role in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role.Trim()));
+                    }
+
 
                     var claimsIdentity = new ClaimsIdentity(claims,
                         CookieAuthenticationDefaults.AuthenticationScheme);

@@ -156,11 +156,19 @@ namespace HelloWorld.Controllers
 
         // Security
         // Authorization to access Notes
-        [Authorize]
+        [Authorize(Roles = "User")] // define roles
         public IActionResult Notes()
         {
             return View();
         }
+
+        // Added for Exercise 2
+        [Authorize(Roles = "Admin")] // define roles
+        public IActionResult Admin()
+        {
+            return View();
+        }
+
 
     }
 }
