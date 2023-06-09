@@ -1,0 +1,16 @@
+﻿@model Ziggle.WebSite.Models.CategoryViewModel
+
+@{
+    ViewBag.Title = Model.Category.Name;
+}
+
+<h2>@Model.Category.Name</h2>
+
+@foreach (var product in Model.Products)
+{
+    @String.Format("{0} - {1:c} - ", product.Name, product.Price)
+   
+    <a asp-action="AddToCart" asp-route-id="@product.Id">Add To Cart</a>
+    
+    <br />
+}

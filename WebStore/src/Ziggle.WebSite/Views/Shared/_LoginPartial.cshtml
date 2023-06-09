@@ -1,15 +1,19 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+﻿@using Newtonsoft.Json;
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
+    <li>
+        <img src='~/images/aspnet-mvc-webstore-shopping-cart-image.png'/>
+    </li>
+@if (Context.Session.GetString("User") != null)
 {
     <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        @{
+            var user = JsonConvert.DeserializeObject<UserModel>(Context.Session.GetString("User"));
+        }  
+        <a class="nav-link text-dark" asp-action="manage" title="Manage">Hello @user.Name</a>
     </li>
     <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+        <form  class="form-inline" asp-action="Logoff">
             <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
         </form>
     </li>
@@ -17,10 +21,10 @@
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link text-dark" asp-action="register">Register</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="nav-link text-dark" asp-action="login">Login</a>
     </li>
 }
 </ul>

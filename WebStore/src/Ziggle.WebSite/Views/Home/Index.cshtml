@@ -1,8 +1,16 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Ziggle.WebSite.Models.IndexModel
+@{
+     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Ziggle</h1>
+<p class="lead">The only way to shop on the Interwebs.</p>
+
+<div class="row">
+    @foreach (var category in Model.Categories)
+    {
+        <div class="col-md-4">
+        <h2><a asp-action="category" asp-route-id="@category.Id">@category.Name</a></h2>
+        </div>
+    }
 </div>
