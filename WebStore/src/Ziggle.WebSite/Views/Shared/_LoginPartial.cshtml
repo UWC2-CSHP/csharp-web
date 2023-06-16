@@ -2,7 +2,8 @@
 
 <ul class="navbar-nav">
     <li>
-        <img src='~/images/aspnet-mvc-webstore-shopping-cart-image.png'/>
+        <a class="nav-link text-dark" asp-action="ViewCart"><img src='~/images/aspnet-mvc-webstore-shopping-cart-image.png'/></a>
+        
     </li>
 @if (Context.Session.GetString("User") != null)
 {

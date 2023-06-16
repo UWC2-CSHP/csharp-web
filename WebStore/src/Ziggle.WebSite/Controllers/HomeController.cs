@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Authorization;
+
+
 namespace Ziggle.WebSite.Controllers
 {
     public class HomeController : Controller
@@ -16,17 +19,60 @@ namespace Ziggle.WebSite.Controllers
         private readonly ICategoryManager categoryManager;
         private readonly IProductManager productManager;
         private readonly IUserManager userManager;
+        private readonly IShoppingCartManager shoppingCartManager;
 
         public HomeController(ILogger<HomeController> logger,
-                              ICategoryManager categoryManager,
-                              IProductManager productManager,
-                              IUserManager userManager)
+                                ICategoryManager categoryManager,
+                                IProductManager productManager,
+                                IUserManager userManager,
+                                IShoppingCartManager shoppingCartManager)
         {
             this.categoryManager = categoryManager;
             this.productManager = productManager;
             this.userManager = userManager;
+            this.shoppingCartManager = shoppingCartManager;
             _logger = logger;
         }
+
+        // Shopping Cart Actions:
+
+        [Authorize]
+        public ActionResult AddToCart(int id)
+        {
+            // For exercise 2: Modify to redirect to ViewCart page
+            // Simply rename AddToCart view to ViewCart as a result
+            var userStr = HttpContext.Session.GetString("User");
+
+            var user = JsonConvert.DeserializeObject<Models.UserModel>(userStr);
+
+            var item = shoppingCartManager.Add(user.Id, id, 1);
+
+            return RedirectToAction("ViewCart");
+
+        }
+
+        [Authorize]
+        public ActionResult ViewCart()
+        {
+            // for exercise 2: we do all that we did before under this ViewCart action
+            var userStr = HttpContext.Session.GetString("User");
+
+            var user = JsonConvert.DeserializeObject<Models.UserModel>(userStr);
+
+            var items = shoppingCartManager.GetAll(user.Id)
+                .Select(t => new Ziggle.WebSite.Models.ShoppingCartItem
+                {
+                    ProductId = t.ProductId,
+                    ProductName = t.ProductName,
+                    ProductPrice = t.ProductPrice,
+                    Quantity = t.Quantity
+                })
+                .ToArray();
+
+            return View(items);
+        }
+
+
 
         // User Registeration Action
         [HttpGet]
@@ -183,10 +229,17 @@ namespace Ziggle.WebSite.Controllers
             return View();
         }
 
+
+        // For exercise 2 of Shopping Cart:
+        // To avoid errors of keeping the previous login data we need to logoff
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            // temporary fix during development of exercise 2
+            LogOff();
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

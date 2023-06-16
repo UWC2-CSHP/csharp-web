@@ -5,6 +5,9 @@ namespace Ziggle.Repository
     public interface IProductRepository
     {
         ProductModel[] ForCategory(int categoryId);
+        
+        // add this to our interface for exercise 1
+        ProductModel GetProduct(int productId); 
     }
 
     public class ProductModel
@@ -14,6 +17,8 @@ namespace Ziggle.Repository
         public decimal Price { get; set; }
         public int Quantity { get; set; }
     }
+
+
 
     public class ProductRepository : IProductRepository
     {
@@ -35,5 +40,20 @@ namespace Ziggle.Repository
                     })
                     .ToArray();
         }
+
+        // Implement GetProduct 
+        public ProductModel GetProduct(int productId)
+        {
+            var product = DatabaseAccessor.Instance.Products.First(t => t.ProductId == productId);
+
+            return new ProductModel
+            {
+                Id = product.ProductId,
+                Name = product.ProductName,
+                Price = product.ProductPrice,
+                Quantity = product.ProductQuantity,
+            };
+        }
+
     }
 }
